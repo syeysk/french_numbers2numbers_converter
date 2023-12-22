@@ -61,18 +61,22 @@ def convert_text(number_text):
         numbers.append(number)
 
     for index, number in enumerate(numbers):
-        if index > 0:
-            prev_number = numbers[index - 1]
-            if prev_number < 20 and number != 100:
-                return get_error_for_incorrect_order(sum(numbers[:index]), number)
-
         if number in [100] and index > 0:
             prev_number = numbers[index - 1]
             if number == 100 and (prev_number > 9 or prev_number == 0):
-                return get_error_for_incorrect_order(sum(numbers[:index]), number)
+                return get_error_for_incorrect_order(prev_number, number)
 
             numbers[index] *= prev_number
             numbers[index - 1] = 0
+        elif index > 0:
+            prev_number = numbers[index - 1]
+            if prev_number < 10:
+                return get_error_for_incorrect_order(prev_number, number)
+            elif prev_number < 20:
+                return get_error_for_incorrect_order(prev_number, number)
+            elif prev_number < 100 and number > 9:
+                return get_error_for_incorrect_order(prev_number, number)
+
 
     print(numbers)
     return sum(numbers)
@@ -101,7 +105,6 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         widget.setLayout(layout)
 
-        # Set the central widget of the Window.
         self.setCentralWidget(widget)
 
     def convert_and_show_text(self):
