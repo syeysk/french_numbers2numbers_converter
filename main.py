@@ -42,11 +42,9 @@ def get_error_for_incorrect_order(prev_number, number):
 def convert_text(number_text):
     number_text = ' '.join(number_text.split())
     segments = number_text.replace(' et un', '-un').replace(' et onze', '-onze').replace('dix-', 'dix').split()
-    print(segments)
     numbers = []
     for segment in segments:
         number = DIGITS.get(segment, segment)
-        print('  number:', number)
         if not isinstance(number, int):
             parts = number.split('-')
             if len(parts) > 1:
@@ -77,8 +75,6 @@ def convert_text(number_text):
             elif prev_number < 100 and number > 9:
                 return get_error_for_incorrect_order(prev_number, number)
 
-
-    print(numbers)
     return sum(numbers)
 
 
