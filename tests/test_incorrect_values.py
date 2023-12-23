@@ -29,9 +29,15 @@ FORMAT_TENS = {
 
 dataset = [
     ('huit cent douze huit', 'единичный формат следует после формата 11-19'),
-    ('douze cent douze', 'число формата сотен следует после формата 11-19'),
+    ('douze cent douze', 'число формата сотни следует после формата 11-19'),
     ('huit cent quatre-vingt huit quatre', 'единичный формат следует после единичного формата'),
-    ('cent quatre-vingt huit un', 'единичный формат следует после единичного формата')
+    ('cent quatre-vingt huit un', 'единичный формат следует после единичного формата'),
+    ('cinq cent cinq cent', 'число формата сотни следует после единичного формата'),
+    ('huit cent dix dix', 'десятичный формат следует после десятичного формата'),
+    ('dix un', 'единичный формат следует после десятичного формата'),
+    ('cinq cent soixante-quinze un', 'единичный формат следует после единичного формата'),
+    ('soixante-et-onze soixante-douze', 'десятичный формат следует после единичного формата'),
+    ('soixante et onze un', 'единичный формат следует после единичного формата'),
 ]
 
 
@@ -80,7 +86,7 @@ def gen_cases_after_11_19(ones=''):
         for useless_number in FORMAT_TENS.values():
             yield f'{ones}cent {number} {useless_number}', 'десятичный формат следует после формата 11-19'
 
-        yield f'{ones}cent {number} cent', 'число формата сотен следует после формата 11-19'
+        yield f'{ones}cent {number} cent', 'число формата сотни следует после формата 11-19'
 
 
 @mark.parametrize(
@@ -102,7 +108,7 @@ def gen_cases_after_tens(ones=''):
         for useless_number in FORMAT_TENS.values():
             yield f'{ones}cent {number} {useless_number}', 'десятичный формат следует после десятичного формата'
 
-        yield f'{ones}cent {number} cent', 'число формата сотен следует после десятичного формата'
+        yield f'{ones}cent {number} cent', 'число формата сотни следует после десятичного формата'
 
 
 @mark.parametrize(

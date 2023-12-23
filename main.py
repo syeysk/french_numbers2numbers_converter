@@ -25,14 +25,14 @@ DIGITS.update(d)
 
 
 def number_to_name(number, case=False):
-    if number < 11:
+    if number < 10:
         return 'единичного формата' if case else 'единичный формат'
     elif 10 < number < 20:
         return 'формата 11-19' if case else 'формат 11-19'
-    elif 19 < number < 100:
+    elif 19 < number < 100 or number == 10:
         return 'десятичного формата' if case else 'десятичный формат'
     elif number > 99:
-        return 'числа формата сотен' if case else 'число формата сотен'
+        return 'числа формата сотни' if case else 'число формата сотни'
 
 
 def get_error_for_incorrect_order(prev_number, number):
@@ -41,7 +41,15 @@ def get_error_for_incorrect_order(prev_number, number):
 
 def convert_text(number_text):
     number_text = ' '.join(number_text.split())
-    segments = number_text.replace(' et un', '-un').replace(' et onze', '-onze').replace('dix-', 'dix').split()
+    segments = (
+        number_text.replace(' et un', '-un')
+        .replace('-et-un', '-un')
+        .replace(' et onze', '-onze')
+        .replace('-et-onze', '-onze')
+        .replace('dix-', 'dix')
+        .split()
+    )
+    print(segments)
     numbers = []
     for segment in segments:
         number = DIGITS.get(segment, segment)
@@ -58,10 +66,14 @@ def convert_text(number_text):
 
         numbers.append(number)
 
+    print(numbers)
     for index, number in enumerate(numbers):
         if number in [100] and index > 0:
             prev_number = numbers[index - 1]
             if number == 100 and (prev_number > 9 or prev_number == 0):
+                return get_error_for_incorrect_order(prev_number, number)
+
+            if sum(numbers[:index]) > 9:
                 return get_error_for_incorrect_order(prev_number, number)
 
             numbers[index] *= prev_number
@@ -73,7 +85,9 @@ def convert_text(number_text):
             elif prev_number < 20:
                 return get_error_for_incorrect_order(prev_number, number)
             elif prev_number < 100 and number > 9:
-                return get_error_for_incorrect_order(prev_number, number)
+                return get_error_for_incorrect_order(prev_number % 10 or prev_number, number)
+            elif (prev_number < 100 and prev_number % 10 != 0) and number < 10:
+                return get_error_for_incorrect_order(prev_number % 10, number)
 
     return sum(numbers)
 
